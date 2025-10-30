@@ -116,8 +116,13 @@ static NSString *const kConsumptionDataKey = @"WaterConsumptionEntries";
     offset.day = -(days - 1);
     NSDate *startDate = [calendar dateByAddingComponents:offset toDate:today options:0];
     
+    // Formateador para crear la clave del dia (ej: "30/10")
     NSDateFormatter *dayFormatter = [[NSDateFormatter alloc] init];
-    [dayFormatter setDateFormat:@"dd/MM"];
+        
+    // CRÍTICO: Usamos "dd/MM" para semanal y "MM/yyyy" o "MM" para mensual, PERO
+    // para que la gráfica muestre las barras por día, DEBEMOS USAR "dd/MM" en ambos,
+    // y la diferencia la marca el número de días del filtro.
+    [dayFormatter setDateFormat:@"dd/MM"]; // Mantiene el formato para que el GraphView muestre los días
     
     for(WaterConsumptionEntry *entry in self.allConsumptionEntries){
         if([entry.date compare:startDate] != NSOrderedAscending) {
