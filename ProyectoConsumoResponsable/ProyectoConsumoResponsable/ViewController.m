@@ -41,12 +41,16 @@ static const double kDailyConsumptionThreshold = 250.0;
     NSDictionary *weeklyData = [[ConsumptionManager sharedManager] getConsumptionSummaryForLastDays:7];
     NSDictionary *monthlyData = [[ConsumptionManager sharedManager] getConsumptionSummaryForLastDays:30];
     
-    // LÓGICA CRÍTICA: Accedemos al contentView del NSBox y lo tratamos como un GraphView
+    // Accedemos al contentView del NSBox y lo tratamos como un GraphView
     GraphView *weeklyGraphView = (GraphView *)self.weeklyGraphBox.contentView;
     weeklyGraphView.dataToDisplay = weeklyData;
+    weeklyGraphView.graphTitle = @"Consumo Semanal de Agua"; // <--- TÍTULO
+    weeklyGraphView.isWeekly = YES;
     
     GraphView *monthlyGraphView = (GraphView *)self.monthlyGraphBox.contentView;
     monthlyGraphView.dataToDisplay = monthlyData;
+    monthlyGraphView.graphTitle = @"Consumo Mensual de Agua (30 días)"; // <--- TÍTULO
+    monthlyGraphView.isWeekly = NO;
     
     
     // 2. Actualizar Alerta y Recomendación
@@ -62,5 +66,16 @@ static const double kDailyConsumptionThreshold = 250.0;
     
     self.recommendationLabel.stringValue = [ConsumptionManager getWaterSavingRecommendation];
 }
+
+#pragma mark - Limpiar Datos
+- (IBAction)clearDataAction:(id)sender {
+    // Llamar al método de limpieza en el Manager
+    [[ConsumptionManager sharedManager] clearAllConsumptionData];
+    
+    // Mostrar una confirmación al usuario
+    self.alertMessageLabel.stringValue = @"¡Historial de consumo borrado!";
+    self.alertMessageLabel.textColor = [NSColor orangeColor];
+}
+    
 
 @end

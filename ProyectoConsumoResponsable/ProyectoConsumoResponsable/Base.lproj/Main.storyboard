@@ -764,6 +764,17 @@
                                     <action selector="registerConsumptionAction:" target="XfG-lQ-9wD" id="6Eu-Rn-qme"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aiP-sC-0Qm">
+                                <rect key="frame" x="422" y="738" width="72" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Borrar" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Vth-ho-pMK">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="clearDataAction:" target="XfG-lQ-9wD" id="YHe-1g-Zwp"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>

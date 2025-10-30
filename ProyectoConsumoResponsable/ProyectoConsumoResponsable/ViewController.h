@@ -15,4 +15,6 @@
 
 - (IBAction)registerConsumptionAction:(id)sender;
 
+-(IBAction)clearDataAction:(id)sender;
+
 @end

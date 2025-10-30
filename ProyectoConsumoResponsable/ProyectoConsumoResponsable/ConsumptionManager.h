@@ -19,8 +19,9 @@ extern NSString *const ConsumptionDataDidUpdateNotification;
 -(double)getTotalConsumptionForToday;
 -(BOOL)isConsumptionOverThresholdForToday:(double)threshold;
 
-// <--- DECLARACIÓN CRÍTICA AÑADIDA
 + (NSString *)getWaterSavingRecommendation;
+
+-(void)clearAllConsumptionData;
 
 @end
 

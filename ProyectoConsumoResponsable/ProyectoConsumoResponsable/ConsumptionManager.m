@@ -31,13 +31,11 @@ static NSString *const kConsumptionDataKey = @"WaterConsumptionEntries";
 #pragma mark - Registro de consumo
 -(void)registerConsumption:(double)liters{
     
-    // 1. Inicializar variables
     WaterConsumptionEntry *entryToUpdate = nil;
     NSCalendar *calendar = [NSCalendar currentCalendar];
     
-    // 2. Buscar una entrada existente para hoy
+    // 1. Buscar una entrada existente para hoy y acumular
     for (WaterConsumptionEntry *entry in self.allConsumptionEntries) {
-        // isDateInToday es más seguro que solo comparar fechas
         if ([calendar isDateInToday:entry.date]) {
             entryToUpdate = entry;
             break;
@@ -45,19 +43,18 @@ static NSString *const kConsumptionDataKey = @"WaterConsumptionEntries";
     }
     
     if (entryToUpdate) {
-        // 3. Si existe, sumar el nuevo consumo al valor existente (Acumulación)
+        // Si existe, sumar el nuevo consumo al valor existente (Acumulación)
         entryToUpdate.litersConsumed += liters;
     } else {
-        // 4. Si no existe, crear una nueva entrada
+        // Si no existe, crear una nueva entrada
         WaterConsumptionEntry *newEntry = [[WaterConsumptionEntry alloc] initWithLiters:liters onDate:[NSDate date]];
         [self.allConsumptionEntries addObject:newEntry];
     }
     
-    // 5. Opcional: Asegurar que la lista esté ordenada por si fue insertado un nuevo elemento
+    // 2. Ordenar y notificar
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:YES];
     [self.allConsumptionEntries sortUsingDescriptors:@[sortDescriptor]];
 
-    // 6. Guardar y notificar a la interfaz
     [self saveEntries];
     [[NSNotificationCenter defaultCenter]postNotificationName:ConsumptionDataDidUpdateNotification object:nil];
 }
@@ -144,6 +141,21 @@ static NSString *const kConsumptionDataKey = @"WaterConsumptionEntries";
     ];
     
     return recommendations[arc4random_uniform((u_int32_t)recommendations.count)];
+}
+
+#pragma mark - Limpieza de Datos
+- (void)clearAllConsumptionData {
+    // 1. Limpiar el array en memoria
+    [self.allConsumptionEntries removeAllObjects];
+    
+    // 2. Limpiar NSUserDefaults (persistencia)
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kConsumptionDataKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    // 3. Notificar a la interfaz para actualizar (gráficos y alertas deben borrarse)
+    [[NSNotificationCenter defaultCenter] postNotificationName:ConsumptionDataDidUpdateNotification object:nil];
+    
+    NSLog(@"[ConsumptionManager] Todos los datos de consumo han sido borrados.");
 }
 
 @end
